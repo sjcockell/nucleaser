@@ -19,12 +19,19 @@ def getIPIList(name):
 				iplist[len(iplist):] = mp.getIPICodes()
 	else:
 		print "Can't find data directory, please try again"
+	return iplist
+
+def classify_nuclease(ipi):
+	domain_list = [`]
+	handler = IPIHandler.IPIHandler(ipi)
 
 
 if __name__ == "__main__":
 	try :
 		if sys.argv[1] == '-e':
 			experiment = sys.argv[2]
-			getIPIList(experiment)
+			ipi_ids = getIPIList(experiment)
+			for ipi_id in ipi_ids:
+				is_nuclease = classifyNuclease(ipi_id)
 	except IndexError:
 		print "Usage: python PredictNucleases.py -e expname"
