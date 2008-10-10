@@ -19,7 +19,10 @@ class IPIHandler:
 		self.seq_file = 'seq/'+ipi_code+'.seq'
 		self.strip_html()
 		handle = open('seq/'+ipi_code+'.seq')
-		self.record = SeqIO.read(handle, 'swiss')
+		try:
+			self.record = SeqIO.read(handle, 'swiss')
+		except ValueError:
+			raise
 
 	def getSequence(self):
 		return self.record.seq
@@ -29,3 +32,6 @@ class IPIHandler:
 
 	def getSequenceLength(self):
 		return len(self.record.seq)
+
+	def getSequenceXRefs(self):
+		return self.record.dbxrefs
