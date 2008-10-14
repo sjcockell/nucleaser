@@ -16,10 +16,19 @@ def getIPIList(name):
 #				print len(iplist)
 				file = os.path.join(data_directory, file)
 				mp = MascotParser.MascotParser(file)
-				iplist[len(iplist):] = mp.getIPICodes()
+				iplist[len(iplist):] = mp.getIPICodes(iplist)
 	else:
 		print "Can't find data directory, please try again"
 	return iplist
+
+def check_domain(list):
+	check = 0
+	for domain in list:
+		p = re.compile(domain)
+		if p.search(ref):
+			check = 1
+			break
+	return check
 
 def classifyNuclease(ipi):
 	domain_list = ['PS00726', 'PS00727', 'PS00728', 'PS00729', 'PS00730', 'PS00731', 'PS00648', 'PS01321', 'PS01070', 'PS00919', 'PS00918', 'PS00764', 'PS01155', 'PS00812', 'PS50819', 'PS51392', 'PS00127', 'PS50879', 'PS01175', 'PS50142', 'PS00517', 'PS01277', 'PS00530', 'PS00531', 'PS50828', 'PS01137', 'PS01090', 'PS01091', 'PS50830', 'PS00841', 'PS00842']
@@ -34,19 +43,14 @@ def classifyNuclease(ipi):
 		xrefs = handler.getSequenceXRefs()
 		check = 0
 		for ref in xrefs:
-			for panther in panther_list:
-				p = re.compile(panther)
-				if p.search(ref):
-					if check != 1:
-						print ipi
-					check = 1
-					returnVal = 1
-#			for domain in domain_list:
-#				if ref == 'PROSITE:'+domain:
-#					if check != 1:
-#						print ipi
-#					check = 1
-#					returnVal = 1
+			check = check_domain(interpro_list, ref)
+			if check == 0:
+				check = check_domain(panther_list, ref)
+			if check == 0:
+				check = check_domain(prosite_list, ref)
+			if check == 1:
+				print ipi
+				returnVal = 1
 	return returnVal
 
 if __name__ == "__main__":
